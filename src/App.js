@@ -1,10 +1,15 @@
-import logo from './logo.svg';
+import { Container } from 'react-bootstrap';
 import './App.scss';
+import Header from './components/Header';
+import TableUsers from './components/TableUsers';
 
 function App() {
   return (
-    <div>
-      oke
+    <div className='app'>
+      <Header />
+      <Container>
+        <TableUsers />
+      </Container>
     </div>
   );
 }
