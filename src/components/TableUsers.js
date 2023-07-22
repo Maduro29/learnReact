@@ -1,26 +1,35 @@
 import Table from 'react-bootstrap/Table'
 import { useEffect, useState } from 'react';
 import { fetchAllUsers } from '../services/userService';
+import ReactPaginate from 'react-paginate';
 
 
 const TableUsers = (props) => {
 
     const [listUsers, setListUsers] = useState([]);
+    const [totalUsers, setTotalUsers] = useState([]);
+    const [totalPages, setTotalPages] = useState([]);
 
     useEffect(() => {
-        getAllUsers();
+        getAllUsers(1);
     }, []);
 
-    const getAllUsers = async () => {
-        let res = await fetchAllUsers();
+    const getAllUsers = async (page) => {
+        let res = await fetchAllUsers(page);
         if (res && res.data) {
+            setTotalPages(res.total_pages);
+            setTotalUsers(res.total);
             setListUsers(res.data);
         }
 
-        console.log(res.data.data);
+        console.log(res);
     }
 
-    console.log(listUsers);
+    const handlePageClick = (event) => {
+        getAllUsers(+event.selected + 1);
+    }
+
+    console.log(totalUsers);
     return (
         <><Table striped bordered hover>
             <thead>
@@ -44,7 +53,27 @@ const TableUsers = (props) => {
                         )
                     })}
             </tbody>
-        </Table></>
+        </Table>
+            <ReactPaginate
+                breakLabel="..."
+                nextLabel="next >"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={totalPages}
+                previousLabel="< previous"
+                renderOnZeroPageCount={null}
+                marginPagesDisplayed={2}
+                pageClassName="page-item"
+                pageLinkClassName="page-link"
+                previousClassName="page-item"
+                previousLinkClassName="page-link"
+                nextClassName="page-item"
+                nextLinkClassName="page-link"
+                breakClassName="page-item"
+                breakLinkClassName="page-link"
+                containerClassName="pagination"
+                activeClassName="active"
+            /></>
     )
 }
 
