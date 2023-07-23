@@ -2,13 +2,14 @@ import Table from 'react-bootstrap/Table'
 import { useEffect, useState } from 'react';
 import { fetchAllUsers } from '../services/userService';
 import ReactPaginate from 'react-paginate';
+import ModalAddNew from './ModalAddNew';
 
 
 const TableUsers = (props) => {
-
+    const { modalStatus, handleClose } = props;
     const [listUsers, setListUsers] = useState([]);
-    const [totalUsers, setTotalUsers] = useState([]);
-    const [totalPages, setTotalPages] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         getAllUsers(1);
@@ -29,31 +30,38 @@ const TableUsers = (props) => {
         getAllUsers(+event.selected + 1);
     }
 
+    const handleUpdateTable = (user) => {
+        setListUsers([user, ...listUsers]);
+        console.log(listUsers);
+    }
+
     console.log(totalUsers);
     return (
-        <><Table striped bordered hover>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {listUsers && listUsers.length > 0 &&
-                    listUsers.map((item, index) => {
-                        return (
-                            <tr key={`user-${index}`}>
-                                <td>{item.id}</td>
-                                <td>{item.email}</td>
-                                <td>{item.first_name}</td>
-                                <td>{item.last_name}</td>
-                            </tr>
-                        )
-                    })}
-            </tbody>
-        </Table>
+        <>
+            <ModalAddNew show={modalStatus} handleClose={handleClose} handleUpdateTable={handleUpdateTable} />
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {listUsers && listUsers.length > 0 &&
+                        listUsers.map((item, index) => {
+                            return (
+                                <tr key={`user-${index}`}>
+                                    <td>{item.id}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.first_name}</td>
+                                    <td>{item.last_name}</td>
+                                </tr>
+                            )
+                        })}
+                </tbody>
+            </Table>
             <ReactPaginate
                 breakLabel="..."
                 nextLabel="next >"
