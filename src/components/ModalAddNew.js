@@ -19,7 +19,6 @@ const ModalAddNew = (props) => {
                 first_name: res.name
             })
         }
-        console.log(res);
     }
 
     return <>

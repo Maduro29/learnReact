@@ -9,6 +9,14 @@ const addNewUser = (name, job) => {
     return axios.post('api/users', { name: name, job: job });
 }
 
+const editUser = (name, job) => {
+    return axios.put('api/users/2', { name: name, job: job });
+}
+
+const deleteUser = () => {
+    return axios.delete('api/users/2');
+}
+
 export {
-    fetchAllUsers, addNewUser
+    fetchAllUsers, addNewUser, editUser, deleteUser
 };
