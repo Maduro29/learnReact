@@ -3,6 +3,8 @@ import './App.scss';
 import Header from './components/Header';
 import TableUsers from './components/TableUsers';
 import { useState } from 'react';
+import Home from './components/Home';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   const [modalStatus, setModalStatus] = useState(false);
@@ -19,13 +21,17 @@ function App() {
     <div className='app'>
       <Header />
       <Container>
-        <div className='my-3 add-new'>
-          <span> <b>List users:</b></span>
-          <button className='btn btn-success' onClick={turnOnModal}>
-            <i className="fa-solid fa-circle-plus"></i> Add new user
-          </button>
-        </div>
-        <TableUsers modalStatus={modalStatus} handleClose={handleClose} />
+        <Routes>
+          <Route path='/home' element={<Home />} />
+          <Route path='/users' element={<>
+            <div className='my-3 add-new'>
+              <span> <b>List users:</b></span>
+              <button className='btn btn-success' onClick={turnOnModal}>
+                <i className="fa-solid fa-circle-plus"></i> Add new user
+              </button>
+            </div>
+            <TableUsers modalStatus={modalStatus} handleClose={handleClose} /></>} />
+        </Routes>
       </Container>
     </div>
   );
