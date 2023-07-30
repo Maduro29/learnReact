@@ -5,6 +5,7 @@ import TableUsers from './components/TableUsers';
 import { useState } from 'react';
 import Home from './components/Home';
 import { Routes, Route } from 'react-router-dom';
+import Login from './components/Login'
 
 function App() {
   const [modalStatus, setModalStatus] = useState(false);
@@ -31,6 +32,7 @@ function App() {
               </button>
             </div>
             <TableUsers modalStatus={modalStatus} handleClose={handleClose} /></>} />
+          <Route path='/login' element={<Login />} />
         </Routes>
       </Container>
     </div>

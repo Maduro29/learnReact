@@ -28,8 +28,8 @@ const Header = (props) => {
                     </Nav>
                     <Nav>
                         <NavDropdown title="Account" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1">Login</NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
+                            <NavLink to="/login" className='nav-link'>Login</NavLink>
+                            <NavLink to="action/3.2" className='nav-link'>Logout</NavLink>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
