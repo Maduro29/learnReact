@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { debounce } from 'lodash';
 import './TableUsers.scss';
 import { CSVLink } from 'react-csv';
-
+import Papa from 'papaparse';
 
 const TableUsers = (props) => {
     const { modalStatus, handleClose } = props;
@@ -103,6 +103,43 @@ const TableUsers = (props) => {
         }
     }
 
+    const handleImportData = (event) => {
+        // Passing file data (event.target.files[0]) to parse using Papa.parse
+        Papa.parse(event.target.files[0], {
+            // header: true,
+            // skipEmptyLines: true,
+            complete: function (results) {
+                let raw = results.data
+                if (raw.length > 0) {
+                    if (raw[0] && raw[0].length === 3) {
+                        let result = [];
+                        if (raw[0][0] === 'email' && raw[0][1] === 'first_name' && raw[0][2] === 'last_name') {
+                            raw.map((item, index) => {
+                                if (index > 0 && item[0]) {
+                                    result.push({
+                                        email: item[0],
+                                        first_name: item[1],
+                                        last_name: item[2]
+                                    })
+                                }
+                            })
+
+                            console.log(result)
+                            setListUsers(result.concat(...listUsers));
+                        } else {
+                            console.error('Wrong header');
+                        }
+                    } else {
+                        console.error('Wrong format');
+                    }
+                } else {
+                    console.error('No data in file')
+                }
+                console.log(raw);
+            }
+        });
+    };
+
     return (
         <>
             <div className='row my-3'>
@@ -117,7 +154,7 @@ const TableUsers = (props) => {
                     <label htmlFor='import' className='btn btn-secondary'>
                         <i className="fa-solid fa-file-import"></i> Import
                     </label>
-                    <input type='file' id='import' hidden />
+                    <input type='file' id='import' hidden onChange={(event) => handleImportData(event)} />
                     <CSVLink
                         data={exportData}
                         filename={"my-file.csv"}
