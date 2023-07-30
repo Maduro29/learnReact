@@ -4,6 +4,8 @@ import { fetchAllUsers } from '../services/userService';
 import ReactPaginate from 'react-paginate';
 import ModalAddNew from './ModalAddNew';
 import ModalActions from './ModalActions';
+import _ from 'lodash';
+import './TableUsers.scss';
 
 
 const TableUsers = (props) => {
@@ -14,6 +16,8 @@ const TableUsers = (props) => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [userDataAction, setUserDataAction] = useState({});
+    const [sortType, setSortType] = useState('');
+    const [sortField, setSortField] = useState('id');
 
     useEffect(() => {
         getAllUsers(1);
@@ -26,8 +30,6 @@ const TableUsers = (props) => {
             setTotalUsers(res.total);
             setListUsers(res.data);
         }
-
-        console.log(res);
     }
 
     const handlePageClick = (event) => {
@@ -61,6 +63,14 @@ const TableUsers = (props) => {
         setListUsers(users);
     }
 
+    const handleSort = (type, field) => {
+        setSortField(field);
+        setSortType(type);
+        let users = _.cloneDeep(listUsers);
+        users = _.orderBy(users, [field], [type]);
+        setListUsers(users);
+    }
+
 
     return (
         <>
@@ -69,9 +79,25 @@ const TableUsers = (props) => {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th className='sort-header'>
+                            <span>
+                                ID
+                            </span>
+                            <span>
+                                <i className="fas fa-arrow-down-long" onClick={() => handleSort('desc', 'id')}></i>
+                                <i className="fas fa-arrow-up-long" onClick={() => handleSort('asc', 'id')}></i>
+                            </span>
+                        </th>
                         <th>Email</th>
-                        <th>First Name</th>
+                        <th className='sort-header'>
+                            <span>
+                                Fisrt Name
+                            </span>
+                            <span>
+                                <i className="fas fa-arrow-down-long" onClick={() => handleSort('desc', 'first_name')}></i>
+                                <i className="fas fa-arrow-up-long" onClick={() => handleSort('asc', 'first_name')}></i>
+                            </span>
+                        </th>
                         <th>Last Name</th>
                         <th>Actions</th>
                     </tr>

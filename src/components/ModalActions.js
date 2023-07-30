@@ -1,4 +1,4 @@
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { editUser, deleteUser } from '../services/userService';
 
