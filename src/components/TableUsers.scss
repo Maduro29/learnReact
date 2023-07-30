@@ -7,3 +7,9 @@
         cursor: pointer;
     }
 }
+
+.group-btn {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}

@@ -5,7 +5,9 @@ import ReactPaginate from 'react-paginate';
 import ModalAddNew from './ModalAddNew';
 import ModalActions from './ModalActions';
 import _ from 'lodash';
+import { debounce } from 'lodash';
 import './TableUsers.scss';
+import { CSVLink } from 'react-csv';
 
 
 const TableUsers = (props) => {
@@ -18,6 +20,7 @@ const TableUsers = (props) => {
     const [userDataAction, setUserDataAction] = useState({});
     const [sortType, setSortType] = useState('');
     const [sortField, setSortField] = useState('id');
+    const [exportData, setExportData] = useState([]);
 
     useEffect(() => {
         getAllUsers(1);
@@ -71,7 +74,7 @@ const TableUsers = (props) => {
         setListUsers(users);
     }
 
-    const handleSearch = _.debounce((event) => {
+    const handleSearch = debounce((event) => {
         let word = event.target.value;
         let users = [...listUsers];
         if (word) {
@@ -82,15 +85,49 @@ const TableUsers = (props) => {
         }
     }, 200)
 
+    const getExportData = (event, done) => {
+        let data = [];
+        if (listUsers && listUsers.length > 0) {
+            data.push(['Id', 'Email', 'First Name', 'Last Name']);
+            listUsers.map(user => {
+                data.push([
+                    user.id,
+                    user.email,
+                    user.first_name,
+                    user.last_name
+                ])
+            })
+            console.log(data);
+            setExportData(data);
+            done();
+        }
+    }
 
     return (
         <>
-            <div className='col-4 my-3'>
-                <input
-                    className='form-control'
-                    placeholder='Search by email'
-                    onChange={(event) => handleSearch(event)}
-                />
+            <div className='row my-3'>
+                <div className='col-4'>
+                    <input
+                        className='form-control'
+                        placeholder='Search by email'
+                        onChange={(event) => handleSearch(event)}
+                    />
+                </div>
+                <div className='col-8 group-btn'>
+                    <label htmlFor='import' className='btn btn-secondary'>
+                        <i className="fa-solid fa-file-import"></i> Import
+                    </label>
+                    <input type='file' id='import' hidden />
+                    <CSVLink
+                        data={exportData}
+                        filename={"my-file.csv"}
+                        className="btn btn-info"
+                        asyncOnClick={true}
+                        onClick={(event, done) => getExportData(event, done)}
+                    >
+                        <i className="fa-solid fa-file-export"></i> Export
+                    </CSVLink>
+                </div>
             </div>
             <ModalAddNew show={modalStatus} handleClose={handleClose} handleUpdateTable={handleUpdateTable} />
             <ModalActions show={actionStatus} handleClose={actionClose} handleAction={handleAction} user={userDataAction} type={actionType} />
@@ -130,8 +167,12 @@ const TableUsers = (props) => {
                                     <td>{item.first_name}</td>
                                     <td>{item.last_name}</td>
                                     <td>
-                                        <button className='btn btn-warning mx-2 btn-edit edit' onClick={() => turnOnAction(item, 'edit')}>Edit</button>
-                                        <button className='btn btn-danger mx-2 btn-delete delete' onClick={() => turnOnAction(item, 'delete')}>Delete</button>
+                                        <button className='btn btn-warning mx-2 btn-edit edit' onClick={() => turnOnAction(item, 'edit')}>
+                                            <i className="fa-solid fa-pen-to-square"></i> Edit
+                                        </button>
+                                        <button className='btn btn-danger mx-2 btn-delete delete' onClick={() => turnOnAction(item, 'delete')}>
+                                            <i className="fa-solid fa-user-xmark"></i> Delete
+                                        </button>
                                     </td>
                                 </tr>
                             )

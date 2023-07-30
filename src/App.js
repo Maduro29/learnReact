@@ -21,7 +21,9 @@ function App() {
       <Container>
         <div className='my-3 add-new'>
           <span> <b>List users:</b></span>
-          <button className='btn btn-success' onClick={turnOnModal}> Add new user</button>
+          <button className='btn btn-success' onClick={turnOnModal}>
+            <i className="fa-solid fa-circle-plus"></i> Add new user
+          </button>
         </div>
         <TableUsers modalStatus={modalStatus} handleClose={handleClose} />
       </Container>
