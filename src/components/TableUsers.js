@@ -71,9 +71,27 @@ const TableUsers = (props) => {
         setListUsers(users);
     }
 
+    const handleSearch = _.debounce((event) => {
+        let word = event.target.value;
+        let users = [...listUsers];
+        if (word) {
+            users = users.filter(user => user.email.includes(word)); // unable to fix the error when change search from 'emmaaa' to 'emma'
+            setListUsers(users);
+        } else {
+            getAllUsers(1);
+        }
+    }, 200)
+
 
     return (
         <>
+            <div className='col-4 my-3'>
+                <input
+                    className='form-control'
+                    placeholder='Search by email'
+                    onChange={(event) => handleSearch(event)}
+                />
+            </div>
             <ModalAddNew show={modalStatus} handleClose={handleClose} handleUpdateTable={handleUpdateTable} />
             <ModalActions show={actionStatus} handleClose={actionClose} handleAction={handleAction} user={userDataAction} type={actionType} />
             <Table striped bordered hover>
