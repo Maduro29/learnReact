@@ -5,9 +5,18 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 import Logo from '../assets/images/logo192.png';
 import { NavLink } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 
 const Header = (props) => {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+
+        localStorage.removeItem('token');
+        navigate('/login');
+    }
+
     return (
         <><Navbar expand="lg" className="bg-body-tertiary">
             <Container>
@@ -28,13 +37,13 @@ const Header = (props) => {
                     </Nav>
                     <Nav>
                         <NavDropdown title="Account" id="basic-nav-dropdown">
-                            <NavLink to="/login" className='nav-link'>Login</NavLink>
-                            <NavLink to="action/3.2" className='nav-link'>Logout</NavLink>
+                            <NavDropdown.Item as={NavLink} to="/login">Login</NavDropdown.Item>
+                            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-        </Navbar></>
+        </Navbar ></>
     )
 }
 
