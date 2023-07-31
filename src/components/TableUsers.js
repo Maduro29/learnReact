@@ -11,7 +11,7 @@ import { CSVLink } from 'react-csv';
 import Papa from 'papaparse';
 
 const TableUsers = (props) => {
-    const { modalStatus, handleClose } = props;
+    // const { modalStatus, handleClose } = props;
     const [actionStatus, setActionStatus] = useState();
     const [actionType, setActionType] = useState();
     const [listUsers, setListUsers] = useState([]);
@@ -21,6 +21,8 @@ const TableUsers = (props) => {
     const [sortType, setSortType] = useState('');
     const [sortField, setSortField] = useState('id');
     const [exportData, setExportData] = useState([]);
+    const [modalStatus, setModalStatus] = useState(false);
+
 
     useEffect(() => {
         getAllUsers(1);
@@ -77,8 +79,13 @@ const TableUsers = (props) => {
     const handleSearch = debounce((event) => {
         let word = event.target.value;
         let users = [...listUsers];
+        console.log(users);
         if (word) {
-            users = users.filter(user => user.email.includes(word)); // unable to fix the error when change search from 'emmaaa' to 'emma'
+            users = users.filter(user => {
+                if (user.email) {
+                    return user.email.includes(word)
+                }
+            }); // unable to fix the error when change search from 'emmaaa' to 'emma'
             setListUsers(users);
         } else {
             getAllUsers(1);
@@ -140,8 +147,22 @@ const TableUsers = (props) => {
         });
     };
 
+    const turnOnModal = () => {
+        setModalStatus(true);
+    }
+
+    const handleClose = () => {
+        setModalStatus(false);
+    }
+
     return (
         <>
+            <div className='my-3 add-new'>
+                <span> <b>List users:</b></span>
+                <button className='btn btn-success' onClick={turnOnModal}>
+                    <i className="fa-solid fa-circle-plus"></i> Add new user
+                </button>
+            </div>
             <div className='row my-3'>
                 <div className='col-4'>
                     <input
