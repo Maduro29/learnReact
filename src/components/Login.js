@@ -2,8 +2,14 @@ import { useEffect, useState } from 'react';
 import './Login.scss';
 import { login } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/userContext';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
+
+    const { loginContext } = useContext(UserContext);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -11,16 +17,16 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        try {
-            let token = localStorage.getItem("token");
-            if (token) {
-                navigate('/home');
-            }
-        } catch (e) {
+    // useEffect(() => {
+    //     try {
+    //         let token = localStorage.getItem("token");
+    //         if (token) {
+    //             navigate('/home');
+    //         }
+    //     } catch (e) {
 
-        }
-    }, []);
+    //     }
+    // }, []);
 
     const handleLogin = async () => {
         if (!email && !password) {
@@ -31,10 +37,9 @@ const Login = () => {
             setLoading(true);
             let res = await login(email, password);
             if (res && res.token) {
-                localStorage.setItem('token', res.token);
+                loginContext(email, res.token)
                 navigate('/home')
             }
-            console.log(res);
             setLoading(false);
         } catch (e) {
         }
@@ -58,7 +63,8 @@ const Login = () => {
                 &nbsp;Login
             </button>
             <div className='back'>
-                <i className="fa-solid fa-angle-left"></i> Go back
+                <i className="fa-solid fa-angle-left"></i>
+                <Link to='/home' style={{ color: 'black' }}>Go back</Link>
             </div>
         </div >
     </>

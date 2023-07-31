@@ -6,14 +6,17 @@ import Container from 'react-bootstrap/Container';
 import Logo from '../assets/images/logo192.png';
 import { NavLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/userContext';
 
 const Header = (props) => {
 
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const { user, logout } = useContext(UserContext);
 
-        localStorage.removeItem('token');
+    const handleLogout = () => {
+        logout();
         navigate('/login');
     }
 
@@ -32,13 +35,17 @@ const Header = (props) => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <NavLink to="home" className='nav-link'>Home</NavLink>
-                        <NavLink to="users" className='nav-link'>Users</NavLink>
+                        {(user && user.auth || window.location.pathname === '/home') &&
+                            <><NavLink to="home" className='nav-link'>Home</NavLink>
+                                <NavLink to="users" className='nav-link'>Users</NavLink></>
+                        }
                     </Nav>
+                    {user && user.auth && <div className='nav-link' style={{ color: 'black' }}>Welcome {user.email}</div>}
                     <Nav>
                         <NavDropdown title="Account" id="basic-nav-dropdown">
-                            <NavDropdown.Item as={NavLink} to="/login">Login</NavDropdown.Item>
-                            <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                            {(user && user.auth) ? <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item> :
+                                <NavDropdown.Item as={NavLink} to="/login">Login</NavDropdown.Item>
+                            }
                         </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
