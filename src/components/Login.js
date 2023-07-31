@@ -35,13 +35,19 @@ const Login = () => {
 
         try {
             setLoading(true);
-            let res = await login(email, password);
+            let res = await login(email.trim(), password);
             if (res && res.token) {
-                loginContext(email, res.token)
+                loginContext(email.trim(), res.token)
                 navigate('/home')
             }
             setLoading(false);
         } catch (e) {
+        }
+    }
+
+    const handleKeyDown = (event) => {
+        if (event.keyCode === 13 && email && password) {
+            handleLogin();
         }
     }
 
@@ -50,11 +56,13 @@ const Login = () => {
             <div className='title'>Log in</div>
             <div className='text'>Email or username (eve.holt@reqres.in)</div>
             <input type='text' placeholder="Email" value={email}
-                onChange={(event) => setEmail(event.target.value)} />
+                onChange={(event) => setEmail(event.target.value)}
+                onKeyDown={(event) => handleKeyDown(event)} />
             <div className='password-container'>
                 <input type={showPassword === true ? 'text' : 'password'} placeholder="Password"
                     value={password}
-                    onChange={(event) => setPassword(event.target.value)} />
+                    onChange={(event) => setPassword(event.target.value)}
+                    onKeyDown={(event) => handleKeyDown(event)} />
                 <i className={showPassword === true ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}
                     onClick={() => setShowPassword(!showPassword)}></i>
             </div>
