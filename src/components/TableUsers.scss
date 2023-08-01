@@ -13,3 +13,23 @@
     justify-content: flex-end;
     gap: 15px;
 }
+
+.table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+// phải để overflow ứng với cái div bên ngoài vì overflow sẽ ảnh hưởng đến thằng con ở bên trong
+
+@media only screen and (max-width: 575.99px) {
+    .group-btn {
+        justify-content: center;
+    }
+
+    .table {
+
+        button {
+            margin-top: 5px;
+        }
+    }
+}
